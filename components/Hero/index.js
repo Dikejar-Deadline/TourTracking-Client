@@ -1,0 +1,1 @@
+export { HeroBullets } from './Hero'
