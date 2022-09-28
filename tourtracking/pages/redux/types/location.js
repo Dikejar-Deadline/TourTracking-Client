@@ -1,0 +1,3 @@
+export const GET_LOCATION = "GET_LOCATION";
+export const SET_LOCATION = "SET_LOCATION";
+export const CURRENT_LOCATION = "CURRENT_LOCATION";
