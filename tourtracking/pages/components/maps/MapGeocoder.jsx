@@ -1,42 +1,15 @@
-import React, { Component, useState } from "react";
-import Geocoder from "react-mapbox-gl-geocoder";
-import ReactMapGL from "react-map-gl";
-
-const mapAccess = {
-  mapboxApiAccessToken:
-    "pk.eyJ1IjoiYTJyaiIsImEiOiJja2g3OW11N3MwNmh1MzBsbDQ4NGVrYWNtIn0.uvhpm1k_6EIRZXyOhHq7QQ",
-};
-
-const mapStyle = {
-  width: "100",
-  height: 600,
-};
-
-const queryParams = {
-  country: "id",
-};
-
 export default function MapGeocoder() {
-  const [viewport, setViewport] = useState({
-    latitude: 37.7577,
-    longitude: -122.4376,
-    zoom: 8,
-  });
+  const getLocation = async () => {
+    const { data } = await axios.get(
+      "https://api.mapbox.com/geocoding/v5/mapbox.places/empang.json?proximity=ip&types=place%2Cpostcode%2Caddress%2Ccountry%2Cregion%2Cdistrict%2Clocality%2Cneighborhood%2Cpoi&access_token=pk.eyJ1IjoiYTJyaiIsImEiOiJja2g3OW11N3MwNmh1MzBsbDQ4NGVrYWNtIn0.uvhpm1k_6EIRZXyOhHq7QQ"
+    );
 
-  const onSelected = (viewport, item) => {
-    setViewport({ viewport });
-    console.log("Selected: ", item);
+    console.log(data);
   };
 
   return (
-    <div>
-      <Geocoder
-        {...mapAccess}
-        onSelected={onSelected}
-        viewport={viewport}
-        hideOnSelect={true}
-        queryParams={queryParams}
-      />
-    </div>
+    <>
+      <p>AHHAHAH</p>
+    </>
   );
 }

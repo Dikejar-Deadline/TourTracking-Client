@@ -1,4 +1,5 @@
 import mapboxgl from "mapbox-gl";
+import Head from "next/head";
 import React from "react";
 import Map, { Layer, Marker, Source } from "react-map-gl";
 import { useSelector } from "react-redux";
@@ -79,22 +80,13 @@ const layerStyle = {
 export default function MapTrack() {
   const { currentLocation } = useSelector((state) => state.location);
 
-  const check = () => {
-    const awal = new mapboxgl.LngLat(-122.4, 37.8);
-    const akhir = new mapboxgl.LngLat(
-      currentLocation.longitude,
-      currentLocation.latitude
-    );
-    console.log(awal.distanceTo(akhir));
-  };
-
   return (
     <div>
-      {/* <Map
+      <Map
         id="MapA"
         initialViewState={currentLocation}
         style={{ width: "100vw", height: 600 }}
-        mapStyle="mapbox://styles/mapbox/streets-v9"
+        mapStyle="mapbox://styles/mapbox/streets-v11"
         mapboxAccessToken={mapboxAccessToken}
         renderWorldCopies={false}
       >
@@ -108,8 +100,7 @@ export default function MapTrack() {
           <Layer {...layerStyle} />
         </Source>
       </Map>
-      <NavigateButton /> */}
-      <MapGeocoder />
+      <NavigateButton />
     </div>
   );
 }

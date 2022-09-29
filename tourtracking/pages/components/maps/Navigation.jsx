@@ -7,7 +7,6 @@ export default function NavigateButton() {
   const { currentLocation } = useSelector((state) => state.location);
   const dispatch = useDispatch();
   const { MapA } = useMap();
-  const [isFirst, setFirst] = useState(true);
   const success = (pos) => {
     const { longitude, latitude } = pos.coords;
     dispatch(
@@ -17,10 +16,7 @@ export default function NavigateButton() {
         latitude,
       })
     );
-    // if (isFirst) {
     centerMap();
-    // setFirst(false);
-    // }
   };
 
   const error = (err) => {
