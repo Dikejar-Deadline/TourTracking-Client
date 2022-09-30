@@ -101,6 +101,7 @@ export default function MapTrack() {
         </Source>
       </Map>
       <NavigateButton />
+      <MapGeocoder />
     </div>
   );
 }
