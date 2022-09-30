@@ -46,6 +46,7 @@ export default function App(props) {
             lg: 1024,
             xl: 1280,
           },
+          primaryColor: 'blue',
         }}
       >
         <Global
@@ -54,15 +55,15 @@ export default function App(props) {
               scrollBehavior: 'smooth',
             },
             '::selection': {
-              background: 'rgb(208, 235, 255, 0.4)',
-              color: '#339af0',
+              background: 'rgb(248, 240, 252, 0.7)',
+              color: '#9C36B5',
             },
             '::-webkit-scrollbar': {
               width: 7,
               height: 5,
             },
             '::-webkit-scrollbar-thumb': {
-              background: '#339af0',
+              background: '#9C36B5',
               transition: '0.25s',
               borderRadius: 2,
             },

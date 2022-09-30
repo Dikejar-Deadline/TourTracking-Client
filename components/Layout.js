@@ -2,7 +2,7 @@ import { Container } from '@mantine/core'
 import { NextSeo } from 'next-seo'
 
 import { Favicons } from './Favicon'
-// import Footer from './Footer'
+import Footer from './Fouter'
 import Header from './Header'
 
 const Layout = (props) => {
@@ -26,7 +26,7 @@ const Layout = (props) => {
       >
         {props.children}
       </Container>
-      {/* <Footer /> */}
+      <Footer />
     </>
   )
 }

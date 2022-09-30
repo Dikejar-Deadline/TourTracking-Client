@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
+import HeaderLogo from './HeaderLogo'
 import { useStyles } from './Header.styles'
 import { links } from './links'
 import ThemeSwitch from '../ThemeSwitch'
@@ -47,7 +48,7 @@ export default function Header() {
           onClick={() => toggleOpened.toggle()}
           aria-label='Toggle navbar'
         />
-        <h1>Tour</h1>
+        <HeaderLogo />
         <Transition transition='slide-right' duration={200} mounted={opened}>
           {(styles) => (
             <Paper className={classes.dropdown} withBorder style={styles}>

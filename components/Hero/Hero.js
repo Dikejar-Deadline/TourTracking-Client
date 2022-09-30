@@ -6,15 +6,12 @@ import {
   Button,
   Group,
   Text,
-  List,
-  ThemeIcon,
 } from '@mantine/core';
-import image from '../../public/static/1.svg';
+import image from '../../public/static/TourTracking.png';
 const useStyles = createStyles((theme) => ({
   inner: {
     display: 'flex',
     justifyContent: 'space-between',
-    paddingBottom: theme.spacing.xl * 4,
   },
 
   content: {
@@ -28,7 +25,7 @@ const useStyles = createStyles((theme) => ({
   },
 
   title: {
-    color: theme.colorScheme === 'dark' ? theme.white : theme.primaryColor,
+    color: "#1971C2",
     fontFamily: `Greycliff CF, ${theme.fontFamily}`,
     fontSize: 44,
     lineHeight: 1.2,
@@ -69,23 +66,23 @@ export function HeroBullets() {
         <div className={classes.inner}>
           <div className={classes.content}>
             <Title className={classes.title}>
-            Vacation, <span className={classes.highlight}>Make Friends,</span> Meet New People
+            Vacation, <span className={classes.highlight}>Make Friends</span> and Healing
             </Title>
             <Text color="dimmed" mt="md">
-            Go beyond your social circle and connect with people near and far. You’re about to have the best online dating experience — all you need are some good pics and a solid bio to stand out.
+            Go beyond your social circle and connect with people near and far. TourTracking is all about making honest connections online and in real life to Vacation Together.
             </Text>
 
 
             <Group mt={30}>
               <Button radius="xl" size="md" className={classes.control}>
-                Make a Journey
+                Create a Journey
               </Button>
               <Button variant="default" radius="xl" size="md" className={classes.control}>
                 Vacation with people
               </Button>
             </Group>
           </div>
-          <Image src={image.src} className={classes.image} />
+          <Image src={image.src} className={classes.image} width={250} />
         </div>
       </Container>
     </div>
