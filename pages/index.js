@@ -15,10 +15,18 @@ function Home() {
       <MapTrack />;
       <button
         onClick={() => {
+          socket.emit("join", {
+            roomId: 2022,
+          });
+        }}
+      >
+        Join room
+      </button>
+      <button
+        onClick={() => {
           socket.emit("message", {
-            text: "message",
-            name: "userName",
-            socketID: socket.id,
+            message: "this is message text",
+            roomId: 2022,
           });
         }}
       >
