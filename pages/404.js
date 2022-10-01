@@ -7,8 +7,8 @@ import {
   Title,
 } from '@mantine/core'
 
-import Layout from '../components/Layout'
-import Link from '../components/Link'
+import Layout from '@/components/Layout'
+import Link from '@/components/Link'
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -35,7 +35,6 @@ const useStyles = createStyles((theme) => ({
     textAlign: 'center',
     fontWeight: 900,
     fontSize: 32,
-    color: theme.primaryColor,
 
     [theme.fn.largerThan('sm')]: {
       fontSize: 38,

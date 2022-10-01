@@ -1,7 +1,7 @@
 import { Button, Tooltip, useMantineColorScheme } from '@mantine/core'
 import { IconMoonStars, IconSun } from '@tabler/icons'
 
-import { useStyles } from '../Header/Header.styles'
+import { useStyles } from '../../Header/Header.styles'
 
 const ThemeSwitch = () => {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme()

@@ -2,8 +2,8 @@ import { Anchor, Box, Divider, useMantineTheme } from '@mantine/core'
 import { useRouter } from 'next/router'
 
 import { useStyles } from './Fouter.styles'
-import { links } from './/links'
-import Link from '../Link'
+import { links } from './links'
+import Link from '@/components/Link'
 
 export default function Footer() {
   const { locale, defaultLocale } = useRouter()

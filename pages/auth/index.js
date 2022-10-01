@@ -13,7 +13,7 @@ import {
   Stack,
 } from '@mantine/core';
 // import { GoogleButton, TwitterButton } from '../SocialButtons/SocialButtons'
-import Layout from '../../components/Layout'
+import Layout from '@/components/Layout'
 import { IconBrandGoogle } from '@tabler/icons'
 
 export default function AuthenticationForm(props) {

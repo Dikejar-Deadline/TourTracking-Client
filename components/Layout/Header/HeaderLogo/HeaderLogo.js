@@ -1,6 +1,6 @@
 import { useStyles } from './HeaderLogo.styles'
-import Link from '../../Link'
-import Logo from '../../Logo'
+import Link from '@/components/Link'
+import Logo from '@/components/Logo'
 
 export default function HeaderLogo() {
   const { classes } = useStyles()

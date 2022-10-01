@@ -7,7 +7,7 @@ import {
   Group,
   Text,
 } from '@mantine/core';
-import image from '../../public/static/TourTracking.png';
+import image from '~/static/TourTracking.png';
 const useStyles = createStyles((theme) => ({
   inner: {
     display: 'flex',

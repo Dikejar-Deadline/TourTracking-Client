@@ -1,14 +1,13 @@
 import { Box, Button, Divider, Title } from "@mantine/core";
-import { CardGrid } from "../components/CardGrid/CardGrid";
-import { CardsCarousel } from "../components/Carousel/Carousel";
-import { FeaturesCards } from "../components/Features/Features";
-import { HeroBullets } from "../components/Hero";
-import Layout from "../components/Layout";
+import { CardsCarousel } from "@/components/Carousel/Carousel";
+import { FeaturesCards } from "@/components/Features/Features";
+import { HeroBullets } from "@/components/Hero";
+import Layout from "@/components/Layout";
 import { motion } from 'framer-motion'
 import { IconArrowRight } from "@tabler/icons";
-import Link from '../components/Link'
+import Link from '@/components/Link'
 import { useHover } from "@mantine/hooks";
-import { CarousalJourney } from "../components/CarouselJourney/CarouselJourney";
+import { CarousalJourney } from "@/components/CarouselJourney";
 
 export default function Home() {
   const { hovered, ref } = useHover()

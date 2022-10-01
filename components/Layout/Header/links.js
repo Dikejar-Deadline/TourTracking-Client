@@ -1,5 +1,5 @@
 export const links = [
-  { href: '/list', text: 'List' },
+  { href: '/destinations', text: 'List Destinations' },
   { href: '/auth', text: 'Create a Journey' },
 
 ]

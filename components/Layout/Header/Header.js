@@ -7,7 +7,7 @@ import { useRouter } from 'next/router'
 import HeaderLogo from './HeaderLogo'
 import { useStyles } from './Header.styles'
 import { links } from './links'
-import ThemeSwitch from '../ThemeSwitch'
+import ThemeSwitch from './ThemeSwitch'
 
 export default function Header() {
   const { classes, cx } = useStyles()

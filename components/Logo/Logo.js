@@ -1,6 +1,6 @@
 import React from 'react'
 import Image from 'next/future/image'
-import img from '../../public/static/TourTracking.png'
+import img from '~/static/TourTracking.png'
 
 const Logo = (props) => {
       return (
