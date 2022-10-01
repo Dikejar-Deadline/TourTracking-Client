@@ -25,7 +25,7 @@ export default function Home() {
         <Button
           component={Link}
           ref={ref}
-          href='/blog'
+          href='/rooms'
           rightIcon={
             <motion.div animate={{ x: hovered ? 5 : 0 }}>
               <IconArrowRight size={20} />
@@ -44,7 +44,7 @@ export default function Home() {
         <Button
           component={Link}
           ref={ref}
-          href='/blog'
+          href='/destinations'
           rightIcon={
             <motion.div animate={{ x: hovered ? 5 : 0 }}>
               <IconArrowRight size={20} />
