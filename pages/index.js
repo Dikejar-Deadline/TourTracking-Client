@@ -1,14 +1,14 @@
 import "mapbox-gl/dist/mapbox-gl.css";
 import MapTrack from "./components/maps/MapTrack";
-import socketIO from "socket.io-client";
 import { useEffect } from "react";
-
-const socket = socketIO.connect("http://localhost:4000");
+import useSocketIo from "./plugin/socketPlugin";
 
 function Home() {
+  const { socket, message } = useSocketIo();
+
   useEffect(() => {
-    socket.on("messageResponse", (data) => console.log(data));
-  }, []);
+    console.log(message);
+  }, [message]);
 
   return (
     <>
@@ -25,7 +25,7 @@ function Home() {
       <button
         onClick={() => {
           socket.emit("message", {
-            message: "this is message text",
+            message: "this is message text" + Math.random() * 1000,
             roomId: 2022,
           });
         }}
