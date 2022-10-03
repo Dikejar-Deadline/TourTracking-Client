@@ -4,11 +4,11 @@ import { useEffect } from "react";
 import useSocketIo from "./plugin/socketPlugin";
 
 function Home() {
-  const { socket, message } = useSocketIo();
+  const { socket, location } = useSocketIo();
 
   useEffect(() => {
-    console.log(message);
-  }, [message]);
+    console.log(location);
+  }, [location]);
 
   return (
     <>
@@ -24,9 +24,11 @@ function Home() {
       </button>
       <button
         onClick={() => {
-          socket.emit("message", {
-            message: "this is message text" + Math.random() * 1000,
-            roomId: 2022,
+          socket.emit("coord", {
+            latitude: "",
+            longitude: "",
+            RoomId: "",
+            UserId: "",
           });
         }}
       >

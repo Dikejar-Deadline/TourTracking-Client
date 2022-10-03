@@ -7,15 +7,15 @@ import io from "socket.io-client";
 
 function useSocketIo() {
   const [isConnected, setIsConnected] = useState(socket.connected);
-  const [message, setMessage] = useState([]);
+  const [location, setLocation] = useState([]);
 
   useEffect(() => {
     socket.on("connect", () => {
       setIsConnected(true);
     });
 
-    socket.on("messageResponse", (data) => {
-      setMessage(data);
+    socket.on("location", (data) => {
+      setLocation(data);
     });
 
     socket.on("disconnect", () => {
@@ -31,7 +31,7 @@ function useSocketIo() {
   return {
     socket,
     isConnected,
-    message,
+    location,
   };
 }
 
