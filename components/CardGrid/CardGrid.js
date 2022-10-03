@@ -1,5 +1,6 @@
 import { Card, Image, Text, Group, Badge, createStyles, Center, Button, Avatar } from '@mantine/core';
 import { IconGasStation, IconGauge, IconManualGearbox, IconUsers } from '@tabler/icons';
+import Link from 'next/link';
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -100,9 +101,9 @@ export function CardGrid() {
             </Text>
           </div>
 
-          <Button radius="xl" style={{ flex: 1 }}>
-            Join
-          </Button>
+          <Link href="/rooms/1" passHref>
+            <Button radius="xl" style={{ flex: 1 }} component="a">Join</Button>
+          </Link>
         </Group>
       </Card.Section>
     </Card>

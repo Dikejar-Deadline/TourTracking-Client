@@ -1,7 +1,7 @@
 import { Anchor, Box, Divider, useMantineTheme } from '@mantine/core'
 import { useRouter } from 'next/router'
 
-import { useStyles } from './Fouter.styles'
+import { useStyles } from './Footer.styles'
 import { links } from './links'
 import Link from '@/components/Link'
 
@@ -45,9 +45,8 @@ export default function Footer() {
                     return (
                       <Anchor
                         key={index}
-                        href={`/feed${
-                          locale === defaultLocale ? '' : `.${locale}`
-                        }.xml`}
+                        href={`/feed${locale === defaultLocale ? '' : `.${locale}`
+                          }.xml`}
                         sx={{
                           color: dark ? '#C1C2C5' : '#1f2937',
                           ...(dark && {

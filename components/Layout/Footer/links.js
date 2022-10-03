@@ -7,12 +7,12 @@ export const links = {
           title: 'Home',
         },
         {
-          href: '/blog',
-          title: 'Blog',
+          href: '/destinations',
+          title: 'List Destinations',
         },
         {
-          href: '/about',
-          title: 'About',
+          href: '/rooms',
+          title: 'List Rooms',
         },
         {
           href: '/feed.xml',
@@ -23,16 +23,16 @@ export const links = {
     {
       list: [
         {
-          href: '/guestbook',
-          title: 'Guestbook',
+          href: '#',
+          title: 'Privacy & Policy',
         },
         {
-          href: '/uses',
-          title: 'Uses',
+          href: '#',
+          title: 'Terms & Conditions',
         },
         {
-          href: '/projects',
-          title: 'Projects',
+          href: '#',
+          title: 'Story',
         },
         {
           href: 'https://hacktiv8.com/',
