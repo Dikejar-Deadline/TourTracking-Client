@@ -17,6 +17,9 @@ export default class _Document extends Document {
             type='font/woff2'
             crossOrigin='anonymous'
           />
+          <script type="text/javascript"
+            src="https://app.sandbox.midtrans.com/snap/snap.js"
+            data-client-key={process.env.SECRETS_CLIENT} defer></script>
         </Head>
         <body>
           <Main />

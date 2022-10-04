@@ -19,6 +19,24 @@ export default function RoomDetailLayout({ children }) {
   const { colorScheme } = useMantineColorScheme()
   const dark = colorScheme === 'dark'
 
+  const handlePayment = (e) => {
+    e.preventDefault
+    let token = "4f493a0d-621f-4e42-a8c1-e10846741c21"
+    snap.pay(token, {
+      onSuccess: function(result) {
+        console.log("SUCCESS", result);
+        alert("Payment accepted \r\n"+JSON.stringify(result));
+      },
+      onPending: function(result) {
+        console.log("Payment pending", result);
+        alert("Payment pending \r\n"+JSON.stringify(result));
+      },
+      onError: function() {
+        console.log("Payment error");
+      }
+    })
+  }
+
   return (
     <Layout
       title="Room Detail"
@@ -64,11 +82,10 @@ export default function RoomDetailLayout({ children }) {
         <div>
           <Button
             component='a'
-            target='_blank'
             variant='outline'
             rel='noopener noreferrer'
-            href="#"
             className={classes.shareButton}
+            onClick={(e) => handlePayment(e)}
           >
             Detail Payment
           </Button>
