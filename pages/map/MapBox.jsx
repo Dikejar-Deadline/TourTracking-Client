@@ -5,52 +5,13 @@ import { useEffect, useRef, useState } from "react";
 import Fav from "../components/Fav";
 import { setCurrentLocation } from "../redux/actions/location";
 import { useDispatch, useSelector } from "react-redux";
-
-const geojson = {
-  type: "FeatureCollection",
-  features: [
-    {
-      type: "Feature",
-      properties: {
-        message: "Foo",
-        iconSize: [60, 60],
-      },
-      geometry: {
-        type: "Point",
-        coordinates: [-66.324462, -16.024695],
-      },
-    },
-    {
-      type: "Feature",
-      properties: {
-        message: "Bar",
-        iconSize: [50, 50],
-      },
-      geometry: {
-        type: "Point",
-        coordinates: [-61.21582, -15.971891],
-      },
-    },
-    {
-      type: "Feature",
-      properties: {
-        message: "Baz",
-        iconSize: [40, 40],
-      },
-      geometry: {
-        type: "Point",
-        coordinates: [-63.292236, -18.281518],
-      },
-    },
-  ],
-};
+import useSocketIo from "../plugin/socketPlugin";
 
 export default function MapBox() {
   const { longitude, latitude, UserId, RoomId } = useRouter().query;
+  const { socket, location } = useSocketIo();
   const mapContainer = useRef(null);
   const map = useRef(null);
-  const [lng, setLng] = useState(-70.9);
-  const [lat, setLat] = useState(42.35);
   const [zoom, setZoom] = useState(9);
   const { currentLocation } = useSelector((state) => state.location);
   const dispatch = useDispatch();
@@ -59,7 +20,7 @@ export default function MapBox() {
     const init = new mapboxgl.Map({
       container: mapContainer.current,
       style: "mapbox://styles/mapbox/streets-v11",
-      center: [lng, lat],
+      center: [longitude, latitude],
       zoom: zoom,
       renderWorldCopies: false,
       accessToken:
@@ -77,6 +38,13 @@ export default function MapBox() {
         latitude,
       })
     );
+    socket.emit("coord", {
+      longitude,
+      latitude,
+      UserId,
+      RoomId,
+    });
+    console.log("sending coord");
     const el = document.createElement("div");
     const width = "40";
     const height = "40";
@@ -89,13 +57,6 @@ export default function MapBox() {
     map.current.flyTo({
       center: [longitude, latitude],
       zoom: 14,
-    });
-
-    socket.emit("coord", {
-      longitude,
-      latitude,
-      UserId,
-      RoomId,
     });
   };
 
@@ -112,6 +73,25 @@ export default function MapBox() {
   };
 
   const addMarker = () => {
+    const geojson = {
+      type: "FeatureCollection",
+      features: [],
+    };
+
+    location.forEach((item) => {
+      geojson.features.push({
+        type: "Feature",
+        properties: {
+          message: "Foo",
+          iconSize: [60, 60],
+        },
+        geometry: {
+          type: "Point",
+          coordinates: [item.longitude, item.latitude],
+        },
+      });
+    });
+
     for (const marker of geojson.features) {
       // Create a DOM element for each marker.
       const el = document.createElement("div");
@@ -130,16 +110,14 @@ export default function MapBox() {
       // Add markers to the map.
       new mapboxgl.Marker(el)
         .setLngLat(marker.geometry.coordinates)
-        .addTo(mapBox);
+        .addTo(map.current);
     }
   };
 
   useEffect(() => {
-    console.log(currentLocation);
-    global.mapBox = map.current;
-    if (map.current) return; // initialize map only once
-    map.current = mapBoxInit();
-  }, [currentLocation]);
+    console.log(location);
+    if (!map.current) map.current = mapBoxInit();
+  }, [currentLocation, location]);
 
   return (
     <>
@@ -147,7 +125,7 @@ export default function MapBox() {
       <button
         id="fly"
         onClick={() => {
-          mapBox.flyTo({
+          map.current.flyTo({
             center: [(Math.random() - 0.5) * 360, (Math.random() - 0.5) * 100],
             essential: true,
           });
@@ -159,7 +137,7 @@ export default function MapBox() {
         My location
       </button>
       <button id="fly" onClick={addMarker}>
-        Add marker
+        Load partisipant
       </button>
       <Fav />
     </>

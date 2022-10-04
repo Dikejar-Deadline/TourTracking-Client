@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import io from "socket.io-client";
 
-// const socket = io("http://localhost:4000", {
-//   transports: ["websocket"],
-// });
+const socket = io("https://41b4-125-166-127-159.ap.ngrok.io", {
+  transports: ["websocket"],
+});
 
 function useSocketIo() {
   const [isConnected, setIsConnected] = useState(socket.connected);
