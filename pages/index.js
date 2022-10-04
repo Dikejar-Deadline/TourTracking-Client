@@ -1,42 +1,39 @@
 import "mapbox-gl/dist/mapbox-gl.css";
-import MapTrack from "./components/maps/MapTrack";
-import { useEffect } from "react";
+import { useState } from "react";
 import useSocketIo from "./plugin/socketPlugin";
+import { useRouter } from "next/router";
 
 function Home() {
-  const { socket, location } = useSocketIo();
-
-  useEffect(() => {
-    console.log(location);
-  }, [location]);
+  const { socket } = useSocketIo();
+  const router = useRouter();
+  const [UserId, setUserId] = useState(null);
 
   return (
     <>
-      <MapTrack />;
+      <input
+        onChange={(e) => {
+          setUserId(e.target.value);
+        }}
+      />
       <button
         onClick={() => {
           socket.emit("join", {
-            roomId: 2022,
+            RoomId: 2022,
+          });
+          router.push({
+            pathname: "map/MapBox",
+            query: {
+              longitude: 117.4405,
+              latitude: -8.506,
+              UserId,
+            },
           });
         }}
       >
         Join room
       </button>
-      <button
-        onClick={() => {
-          socket.emit("coord", {
-            latitude: "",
-            longitude: "",
-            RoomId: "",
-            UserId: "",
-          });
-        }}
-      >
-        Emit message
-      </button>
     </>
   );
-  // return <Fav />;
 }
 
 export default Home;

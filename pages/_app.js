@@ -6,8 +6,7 @@ import "../styles/mapbox.directions.css";
 import { MantineProvider } from "@mantine/core";
 import { io } from "socket.io-client";
 
-global.socket = io("http://localhost:4000", {
-  // global.socket = io("https://2ee2-125-166-126-49.ap.ngrok.io", {
+global.socket = io("https://13d5-125-166-127-159.ap.ngrok.io", {
   transports: ["websocket"],
 });
 
