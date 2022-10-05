@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import io from "socket.io-client";
 
-const socket = io("https://41b4-125-166-127-159.ap.ngrok.io", {
+const socket = io("https://42b2-125-166-126-165.ap.ngrok.io", {
   transports: ["websocket"],
 });
 
@@ -15,6 +15,7 @@ function useSocketIo() {
     });
 
     socket.on("location", (data) => {
+      data = [...new Map(data.map((item) => [item["UserId"], item])).values()];
       setLocation(data);
     });
 

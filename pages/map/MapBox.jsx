@@ -8,13 +8,13 @@ import { useDispatch, useSelector } from "react-redux";
 import useSocketIo from "../plugin/socketPlugin";
 
 export default function MapBox() {
+  const { currentLocation } = useSelector((state) => state.location);
+  const dispatch = useDispatch();
   const { longitude, latitude, UserId, RoomId } = useRouter().query;
   const { socket, location } = useSocketIo();
   const mapContainer = useRef(null);
   const map = useRef(null);
   const [zoom, setZoom] = useState(9);
-  const { currentLocation } = useSelector((state) => state.location);
-  const dispatch = useDispatch();
 
   const mapBoxInit = () => {
     const init = new mapboxgl.Map({
@@ -44,20 +44,6 @@ export default function MapBox() {
       UserId,
       RoomId,
     });
-    console.log("sending coord");
-    const el = document.createElement("div");
-    const width = "40";
-    const height = "40";
-    el.className = "marker";
-    el.style.backgroundImage = `url(https://placekitten.com/g/${width}/${height}/)`;
-    el.style.width = `${width}px`;
-    el.style.height = `${height}px`;
-    el.style.backgroundSize = "100%";
-    new mapboxgl.Marker(el).setLngLat([longitude, latitude]).addTo(map.current);
-    map.current.flyTo({
-      center: [longitude, latitude],
-      zoom: 14,
-    });
   };
 
   const error = (err) => {
@@ -72,12 +58,30 @@ export default function MapBox() {
     });
   };
 
+  const flyToMyLocation = () => {
+    myLocation();
+    map.current.flyTo({
+      center: [currentLocation.longitude, currentLocation.latitude],
+      zoom: 14,
+    });
+  };
+
   const addMarker = () => {
     const geojson = {
       type: "FeatureCollection",
       features: [],
     };
-
+    geojson.features.push({
+      type: "Feature",
+      properties: {
+        message: "Place",
+        iconSize: [60, 60],
+      },
+      geometry: {
+        type: "Point",
+        coordinates: [longitude, latitude],
+      },
+    });
     location.forEach((item) => {
       geojson.features.push({
         type: "Feature",
@@ -91,6 +95,9 @@ export default function MapBox() {
         },
       });
     });
+
+    const currentMarker = document.querySelectorAll(".marker");
+    currentMarker.forEach((marker) => marker.remove());
 
     for (const marker of geojson.features) {
       // Create a DOM element for each marker.
@@ -115,30 +122,19 @@ export default function MapBox() {
   };
 
   useEffect(() => {
-    console.log(location);
     if (!map.current) map.current = mapBoxInit();
+    addMarker();
   }, [currentLocation, location]);
 
   return (
     <>
       <div ref={mapContainer} className="map-container" id="map" />
-      <button
-        id="fly"
-        onClick={() => {
-          map.current.flyTo({
-            center: [(Math.random() - 0.5) * 360, (Math.random() - 0.5) * 100],
-            essential: true,
-          });
-        }}
-      >
-        fly
-      </button>
-      <button id="fly" onClick={myLocation}>
+      <button id="fly" onClick={flyToMyLocation}>
         My location
       </button>
-      <button id="fly" onClick={addMarker}>
+      {/* <button id="fly" onClick={addMarker}>
         Load partisipant
-      </button>
+      </button> */}
       <Fav />
     </>
   );

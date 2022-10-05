@@ -4,13 +4,13 @@ import useSocketIo from "./plugin/socketPlugin";
 import { useRouter } from "next/router";
 
 function Home() {
-  const { socket, location } = useSocketIo();
+  const { socket } = useSocketIo();
   const router = useRouter();
   const [UserId, setUserId] = useState(null);
 
-  useEffect(() => {
-    console.log(location);
-  }, [location]);
+  // useEffect(() => {
+  //   console.log(location);
+  // }, [location]);
 
   return (
     <>
