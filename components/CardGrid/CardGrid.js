@@ -90,14 +90,14 @@ export function CardGrid(props) {
         <Group spacing={30}>
           <div>
             <Text size="xl" weight={700} sx={{ lineHeight: 1 }}>
-              {new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(room.price)}
+              {new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(+room?.price)}
             </Text>
             <Text size="sm" color="dimmed" weight={500} sx={{ lineHeight: 1 }} mt={3}>
               Split bill
             </Text>
           </div>
 
-          <Link href={`/rooms/${room.id}`} passHref>
+          <Link href={`/rooms/${room?.id}`} passHref>
             <Button radius="xl" style={{ flex: 1 }} component="a">Join</Button>
           </Link>
         </Group>
