@@ -54,7 +54,6 @@ const avatars = [
 export function CardGrid(props) {
   const { classes } = useStyles();
   const { data: room } = props
-  console.log(room.Destination)
 
   return (
     <Card withBorder radius="md" className={classes.card}>
@@ -98,7 +97,7 @@ export function CardGrid(props) {
             </Text>
           </div>
 
-          <Link href="/rooms/1" passHref>
+          <Link href={`/rooms/${room.id}`} passHref>
             <Button radius="xl" style={{ flex: 1 }} component="a">Join</Button>
           </Link>
         </Group>

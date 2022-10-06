@@ -48,3 +48,33 @@ mutation CreateRoom($price: Int, $accountNumber: Int, $accountName: String, $max
   }
 }
 `;
+
+
+export const GET_ROOM = gql`
+  query Query($roomByIdId: ID!) {
+    roomById(id: $roomByIdId) {
+      id
+      price
+      accountNumber
+      accountName
+      maxParticipant
+      minParticipant
+      schedule
+      dropPoint
+      duration
+      UserId
+      DestinationId
+      Destination {
+        id
+        name
+        description
+        imgUrl
+      }
+      Participants {
+        id
+        picture
+        username
+      }
+    }
+  }
+`;

@@ -44,7 +44,7 @@ export default function AuthenticationForm(props) {
     destinationId: form.values.destinationId,
   }
 
-  const { mutate, error } = useGQLMutate(SET_ROOM, data)
+  const { mutate, error } = useGQLMutate(SET_ROOM, data, ['rooms'])
   const handleCreate = (e) => {
     /* eslint-disable */
     e.preventDefault()
