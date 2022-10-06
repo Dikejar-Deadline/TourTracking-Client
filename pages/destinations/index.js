@@ -1,21 +1,31 @@
-import { Button, createStyles, Grid, Input, List, Paper, Text, Title } from '@mantine/core'
-import { IconSearch } from '@tabler/icons'
-import React from 'react'
-
-
-import Layout from '@/components/Layout'
-import PageLayout from '@/components/Layout/PageLayout'
-// import PostsList from '@/components/PostsList' 
+import {
+  Button,
+  createStyles,
+  Grid,
+  Input,
+  Paper,
+  Text,
+  Title,
+} from "@mantine/core";
+import { IconSearch } from "@tabler/icons";
+import React, { useCallback, useEffect, useState } from "react";
+import Layout from "@/components/Layout";
+import PageLayout from "@/components/Layout/PageLayout";
+import { GET_DESTINATIONS } from "gql/schema";
+import { useRouter } from "next/router";
+import debounce from "lodash.debounce";
+import { useMutation, useQuery } from "@apollo/client";
+import { DELETE_DESTINATON } from "gql/schema/destinations";
 
 const useStyles = createStyles((theme) => ({
   card: {
     height: 440,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
   },
 
   title: {
@@ -31,17 +41,44 @@ const useStyles = createStyles((theme) => ({
     color: theme.white,
     opacity: 0.7,
     fontWeight: 700,
-    textTransform: 'uppercase',
+    textTransform: "uppercase",
   },
 }));
 
-export default function Blog({ posts }) {
-  const [searchValue, setSearchValue] = React.useState('')
+export default function DestinationIndex() {
+  const router = useRouter();
+  const [searchValue, setSearchValue] = useState("");
+  const [filtered, setFiltered] = useState([]);
+  const { loading, error, data } = useQuery(GET_DESTINATIONS);
+  const [
+    deleteDestination,
+    { data: deteleData, loading: loadingData, error: errorData },
+  ] = useMutation(DELETE_DESTINATON, {
+    refetchQueries: [{ query: GET_DESTINATIONS }],
+  });
 
-  // const filteredPosts = posts.filter((post) =>
-  //   post.title.toLowerCase().includes(searchValue.toLowerCase())
-  // )
-  function Card({ image, title, category }) {
+  const filterDestination = () => {
+    if (searchValue) {
+      setFiltered(
+        data?.destinations.filter(({ name }) => {
+          return name.toLowerCase().search(searchValue) == 0;
+        })
+      );
+    } else {
+      setFiltered(data?.destinations);
+    }
+  };
+
+  const changeHandler = (event) => {
+    setSearchValue(event.target.value);
+  };
+  const debouncedChangeHandler = useCallback(debounce(changeHandler, 300), []);
+
+  useEffect(() => {
+    if (data) filterDestination();
+  }, [data, searchValue]);
+
+  function Card({ id, name, imgUrl, description }) {
     const { classes } = useStyles();
 
     return (
@@ -49,87 +86,91 @@ export default function Blog({ posts }) {
         shadow="md"
         p="xl"
         radius="md"
-        sx={{ backgroundImage: `url(${image})` }}
+        sx={{ backgroundImage: `url(${imgUrl})` }}
         className={classes.card}
       >
         <div>
           <Text className={classes.category} size="xs">
-            {category}
+            {name}
           </Text>
           <Title order={3} className={classes.title}>
-            {title}
+            {description.slice(0, 50)}...
           </Title>
         </div>
-        <Button variant="white" color="dark">
+        <Button
+          variant="white"
+          color="dark"
+          onClick={() => {
+            router.push({
+              pathname: "/destinations/destinationById",
+              query: { id },
+            });
+          }}
+        >
           Create Journey
         </Button>
+        <button
+          onClick={() => {
+            router.push({
+              pathname: "/destinations/edit",
+              query: { id },
+            });
+          }}
+        >
+          Edit destination
+        </button>
+        <button
+          onClick={() => {
+            deleteDestination({
+              variables: { deleteDestinationId: id },
+            });
+          }}
+        >
+          Delete destination
+        </button>
       </Paper>
     );
   }
 
-  const data = [
-    {
-      image:
-        'https://images.unsplash.com/photo-1508193638397-1c4234db14d8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
-      title: 'Best forests to visit in North America',
-      category: 'Sumbawa',
-    },
-    {
-      image:
-        'https://images.unsplash.com/photo-1559494007-9f5847c49d94?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
-      title: 'Hawaii beaches review: better than you think',
-      category: 'Sumbawa',
-    },
-    {
-      image:
-        'https://images.unsplash.com/photo-1608481337062-4093bf3ed404?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
-      title: 'Mountains at night: 12 best locations to enjoy the view',
-      category: 'Sumbawa',
-    },
-    {
-      image:
-        'https://images.unsplash.com/photo-1507272931001-fc06c17e4f43?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
-      title: 'Aurora in Norway: when to visit for best experience',
-      category: 'Sumbawa',
-    },
-    {
-      image:
-        'https://images.unsplash.com/photo-1510798831971-661eb04b3739?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
-      title: 'Best places to visit this winter',
-      category: 'Sumbawa',
-    },
-    {
-      image:
-        'https://images.unsplash.com/photo-1582721478779-0ae163c05a60?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
-      title: 'Active volcanos reviews: travel at your own risk',
-      category: 'Sumbawa',
-    },
-  ];
-
-
   return (
-    <Layout title='Destinations List'>
+    <Layout title="Destinations List">
       <PageLayout
-        title='Destinations List'
+        title="Destinations List"
         description="Make your own journey and plans your holiday together with new people."
       >
+        <button
+          onClick={() => {
+            router.push({
+              pathname: "destinations/create",
+            });
+          }}
+        >
+          Create destination
+        </button>
+
         <Input
           icon={<IconSearch size={15} />}
           placeholder="Search Destinations"
-          type='text'
-          radius='md'
+          type="text"
+          radius="md"
           aria-label="Search Destinations"
-          onChange={(e) => setSearchValue(e.target.value)}
+          onChange={debouncedChangeHandler}
         />
-        <Grid my={60}>
-          {data.map((item) => (
-            <Grid.Col key={data.title} span={12} md={6}>
-              <Card {...item} />
-            </Grid.Col>
-          ))}
-        </Grid>
 
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          <Grid my={60}>
+            {filtered.map((item, index) => {
+              return (
+                <Grid.Col key={index.toString()} span={12} md={6}>
+                  <Card {...item} />
+                </Grid.Col>
+              );
+            })}
+          </Grid>
+        )}
       </PageLayout>
     </Layout>
-  )
+  );
 }

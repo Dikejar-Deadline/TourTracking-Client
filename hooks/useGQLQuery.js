@@ -1,21 +1,23 @@
-import { useQuery } from '@tanstack/react-query';
-import { GraphQLClient, request } from 'graphql-request';
+import { useQuery } from "@tanstack/react-query";
+import { GraphQLClient, request } from "graphql-request";
 
-const endpoint = 'https://7bbc-140-213-150-122.ap.ngrok.io/';
+export const graphQlEndpoint = "http://localhost:4000/";
 export const useGQLQuery = (key, query, variables, config = {}) => {
   const headers = {
     headers: {
-      authorization: `token`
-    }
-  }
+      authorization: localStorage.getItem("access_token"),
+    },
+  };
 
-  const graphQLClient = new GraphQLClient(endpoint, headers);
+  const graphQLClient = new GraphQLClient(graphQlEndpoint, headers);
 
   // const fetchData = async () => await graphQLClient.request(query, variables);
-  
-  const fetchData = async () => await request(endpoint, query, variables);
+
+  const fetchData = async () =>
+    await request(graphQlEndpoint, query, variables);
 
   return useQuery(key, fetchData, config);
 };
 
-export const fetchData = async (query, variables) => await request(endpoint, query, variables);
+export const fetchData = async (query, variables) =>
+  await request(graphQlEndpoint, query, variables);
