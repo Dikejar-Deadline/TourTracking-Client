@@ -1,6 +1,6 @@
 import { Carousel } from '@mantine/carousel';
 import { useMediaQuery } from '@mantine/hooks';
-import { createStyles, Paper, Text, Title, Button, useMantineTheme } from '@mantine/core';
+import { createStyles, Paper, Text, Title, Button, useMantineTheme, Highlight } from '@mantine/core';
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -16,14 +16,14 @@ const useStyles = createStyles((theme) => ({
   title: {
     fontFamily: `Greycliff CF, ${theme.fontFamily}`,
     fontWeight: 900,
-    color: theme.white,
+    color: theme.colors.blue,
     lineHeight: 1.2,
-    fontSize: 23,
+    fontSize: 20,
     marginTop: theme.spacing.xs,
   },
 
   category: {
-    color: theme.white,
+    color: theme.colors.blue,
     opacity: 0.7,
     fontWeight: 700,
     textTransform: 'uppercase',
@@ -42,12 +42,12 @@ function Card({ image, title, category }) {
       className={classes.card}
     >
       <div>
-        <Text className={classes.category} size="xs">
+        <Highlight highlight={category} className={classes.category} size="xs">
           {category}
-        </Text>
-        <Title order={3} className={classes.title}>
+        </Highlight>
+        <Highlight highlight={title} order={3} className={classes.title}>
           {title}
-        </Title>
+        </Highlight>
       </div>
       <Button variant="white" color="dark">
         Create Journey
@@ -97,7 +97,6 @@ const data = [
 
 export function CarousalJourney(props) {
   const theme = useMantineTheme();
-  console.log(props.data)
   const mobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm}px)`);
   const slides = props.data?.map((item) => (
     <Carousel.Slide key={item.title}>

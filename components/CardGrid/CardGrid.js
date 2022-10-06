@@ -1,6 +1,7 @@
 import { Card, Image, Text, Group, Badge, createStyles, Center, Button, Avatar } from '@mantine/core';
 import { IconGasStation, IconGauge, IconManualGearbox, IconUsers } from '@tabler/icons';
 import Link from 'next/link';
+const dayjs = require('dayjs')
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -53,21 +54,22 @@ const avatars = [
 export function CardGrid(props) {
   const { classes } = useStyles();
   const { data: room } = props
+  console.log(room.Destination)
 
   return (
     <Card withBorder radius="md" className={classes.card}>
       <Card.Section className={classes.imageSection}>
-        <Image src="https://a.cdn-hotels.com/gdcs/production143/d1112/c4fedab1-4041-4db5-9245-97439472cf2c.jpg" alt="Tesla Model S" />
+        <Image src={room?.Destination?.imgUrl} />
       </Card.Section>
 
       <Group position="apart" mt="md">
         <div>
-          <Text weight={500}>Sumbawa</Text>
+          <Text weight={500}>{room?.Destination?.name}</Text>
           <Text size="xs" color="dimmed">
-            Pantai Mantun
+            {room?.Destination?.description}
           </Text>
         </div>
-        <Badge variant="outline">12 days left</Badge>
+        <Badge variant="outline">{dayjs(room?.Destination?.schedule).format("DD-MMM-YYYY")}</Badge>
       </Group>
 
       <Card.Section className={classes.section} mt="md">
@@ -89,7 +91,7 @@ export function CardGrid(props) {
         <Group spacing={30}>
           <div>
             <Text size="xl" weight={700} sx={{ lineHeight: 1 }}>
-              {room.price}
+              {new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(room.price)}
             </Text>
             <Text size="sm" color="dimmed" weight={500} sx={{ lineHeight: 1 }} mt={3}>
               Split bill
