@@ -21,7 +21,7 @@ export default function RoomDetailLayout({ children }) {
 
   const handlePayment = (e) => {
     e.preventDefault
-    let token = "4f493a0d-621f-4e42-a8c1-e10846741c21"
+    let token = "1f0840c8-e50c-4967-bbda-1d0b0d1ca99f"
     snap.pay(token, {
       onSuccess: function(result) {
         console.log("SUCCESS", result);

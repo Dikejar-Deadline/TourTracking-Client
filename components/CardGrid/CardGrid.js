@@ -50,14 +50,9 @@ const avatars = [
   'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=255&q=80',
 ];
 
-export function CardGrid() {
+export function CardGrid(props) {
   const { classes } = useStyles();
-  const features = mockdata.map((feature) => (
-    <Center key={feature.label}>
-      <feature.icon size={18} className={classes.icon} stroke={1.5} />
-      <Text size="xs">{feature.label}</Text>
-    </Center>
-  ));
+  const { data: room } = props
 
   return (
     <Card withBorder radius="md" className={classes.card}>
@@ -81,12 +76,12 @@ export function CardGrid() {
         </Text>
 
         <Group spacing={8} mb={-8}>
-        <Avatar.Group spacing="sm">
-          <Avatar src={avatars[0]} radius="xl" />
-          <Avatar src={avatars[1]} radius="xl" />
-          <Avatar src={avatars[2]} radius="xl" />
-          <Avatar radius="xl">+5</Avatar>
-        </Avatar.Group>
+          <Avatar.Group spacing="sm">
+            <Avatar src={avatars[0]} radius="xl" />
+            <Avatar src={avatars[1]} radius="xl" />
+            <Avatar src={avatars[2]} radius="xl" />
+            <Avatar radius="xl">+5</Avatar>
+          </Avatar.Group>
         </Group>
       </Card.Section>
 
@@ -94,7 +89,7 @@ export function CardGrid() {
         <Group spacing={30}>
           <div>
             <Text size="xl" weight={700} sx={{ lineHeight: 1 }}>
-              Rp 500.000,-
+              {room.price}
             </Text>
             <Text size="sm" color="dimmed" weight={500} sx={{ lineHeight: 1 }} mt={3}>
               Split bill

@@ -1,9 +1,12 @@
 import { ColorSchemeProvider, Global, MantineProvider, } from '@mantine/core'
 import { useHotkeys, useLocalStorage } from '@mantine/hooks'
 import { useRouter } from 'next/router'
+import { Hydrate, QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { useState } from 'react'
 
 export default function App(props) {
   const { Component, pageProps } = props
+  const [queryClient] = useState(() => new QueryClient())
   const [colorScheme, setColorScheme] = useLocalStorage({
     key: 'mantine-color-scheme',
     defaultValue: 'light',
@@ -76,7 +79,11 @@ export default function App(props) {
             },
           })}
         />
-        <Component {...pageProps} />
+        <QueryClientProvider client={queryClient}>
+          <Hydrate state={pageProps.dehydratedState}>
+            <Component {...pageProps} />
+          </Hydrate>
+        </QueryClientProvider>
       </MantineProvider>
     </ColorSchemeProvider>
   )

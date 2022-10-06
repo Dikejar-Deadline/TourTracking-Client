@@ -18,7 +18,7 @@ const useStyles = createStyles((theme) => ({
     fontWeight: 900,
     color: theme.white,
     lineHeight: 1.2,
-    fontSize: 32,
+    fontSize: 23,
     marginTop: theme.spacing.xs,
   },
 
@@ -95,12 +95,13 @@ const data = [
   },
 ];
 
-export function CarousalJourney() {
+export function CarousalJourney(props) {
   const theme = useMantineTheme();
+  console.log(props.data)
   const mobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm}px)`);
-  const slides = data.map((item) => (
+  const slides = props.data?.map((item) => (
     <Carousel.Slide key={item.title}>
-      <Card {...item} />
+      <Card image={item.imgUrl} title={item.description} category={item.name} />
     </Carousel.Slide>
   ));
 
