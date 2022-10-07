@@ -3,6 +3,7 @@ import { useHotkeys, useLocalStorage } from '@mantine/hooks'
 import { useRouter } from 'next/router'
 import { Hydrate, QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useState } from 'react'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 export default function App(props) {
   const { Component, pageProps } = props
@@ -83,6 +84,7 @@ export default function App(props) {
           <Hydrate state={pageProps.dehydratedState}>
             <Component {...pageProps} />
           </Hydrate>
+          <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </MantineProvider>
     </ColorSchemeProvider>

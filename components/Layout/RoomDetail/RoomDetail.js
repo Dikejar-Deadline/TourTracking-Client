@@ -15,7 +15,7 @@ const avatars = [
 
 export default function RoomDetailLayout({ data, children }) {
   console.log(data)
-  const ISOPublishedTime = new Date(data?.schedule).toISOString()
+  const ISOPublishedTime = data?.schedule ? new Date(data?.schedule).toISOString() : null
   const { classes } = useStyles()
 
   const { colorScheme } = useMantineColorScheme()
