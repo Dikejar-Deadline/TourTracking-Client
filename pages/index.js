@@ -44,7 +44,7 @@ export default function Home() {
         </Title>
       </div>
       <Divider my="xl" />
-      <CardsCarousel data={rooms.rooms} />
+      <CardsCarousel data={rooms?.rooms} />
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
         <Button
           component={Link}
@@ -65,7 +65,7 @@ export default function Home() {
         Create Your Own Journey
       </Title>
       <Divider my="xl" />
-      <CarousalJourney data={destinations.destinations} />
+      <CarousalJourney data={destinations?.destinations} />
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
         <Button
           component={Link}

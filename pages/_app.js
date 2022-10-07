@@ -9,6 +9,7 @@ import {
 import { useState } from "react";
 import { ApolloProvider } from "@apollo/client";
 import { useApolloConfig } from "hooks/useApolloConfig";
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 
 export default function App(props) {
@@ -94,6 +95,7 @@ export default function App(props) {
             <Hydrate state={pageProps.dehydratedState}>
               <Component {...pageProps} />
             </Hydrate>
+            <ReactQueryDevtools initialIsOpen={false} />
           </QueryClientProvider>
         </MantineProvider>
       </ColorSchemeProvider>
