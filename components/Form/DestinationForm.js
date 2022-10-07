@@ -1,6 +1,7 @@
 import { useMutation } from "@apollo/client";
 import { Box, Button, Group, Textarea, TextInput, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { useLocalStorage } from "@mantine/hooks";
 import {
   CREATE_DESTINATION,
   EDIT_DESTINATION,
@@ -9,10 +10,16 @@ import {
 import { useEffect } from "react";
 
 export default function DestinationForm({ props = null }) {
+  const token = useLocalStorage({ key: "access_token" });
   const [createDestination, { data, loading, error }] = useMutation(
     CREATE_DESTINATION,
     {
       refetchQueries: [{ query: GET_DESTINATIONS }],
+      context: {
+        headers: {
+          Authorization: token ? token : "",
+        },
+      },
     }
   );
   const [
@@ -20,6 +27,11 @@ export default function DestinationForm({ props = null }) {
     { data: dataEdit, loading: loadingEdit, error: errorEdit },
   ] = useMutation(EDIT_DESTINATION, {
     refetchQueries: [{ query: GET_DESTINATIONS }],
+    context: {
+      headers: {
+        authorization: token ? token : "",
+      },
+    },
   });
 
   const form = useForm({

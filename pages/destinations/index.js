@@ -11,12 +11,11 @@ import { IconSearch } from "@tabler/icons";
 import React, { useCallback, useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import PageLayout from "@/components/Layout/PageLayout";
-import { GET_DESTINATIONS } from "gql/schema";
 import { useRouter } from "next/router";
+import { useLocalStorage } from "@mantine/hooks";
 import debounce from "lodash.debounce";
 import { useMutation, useQuery } from "@apollo/client";
-import { DELETE_DESTINATON } from "gql/schema/destinations";
-
+import { GET_DESTINATIONS, DELETE_DESTINATON } from "gql/schema/destinations";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -48,6 +47,7 @@ const useStyles = createStyles((theme) => ({
 
 export default function DestinationIndex() {
   const router = useRouter();
+  const token = useLocalStorage({ key: "access_token" });
   const [searchValue, setSearchValue] = useState("");
   const [filtered, setFiltered] = useState([]);
   const { loading, error, data } = useQuery(GET_DESTINATIONS);
@@ -56,6 +56,11 @@ export default function DestinationIndex() {
     { data: deteleData, loading: loadingData, error: errorData },
   ] = useMutation(DELETE_DESTINATON, {
     refetchQueries: [{ query: GET_DESTINATIONS }],
+    context: {
+      headers: {
+        Authorization: token ? token : "",
+      },
+    },
   });
 
   const filterDestination = () => {
@@ -77,10 +82,10 @@ export default function DestinationIndex() {
 
   useEffect(() => {
     if (data) filterDestination();
+    console.log(data);
   }, [data, searchValue]);
 
   function Card({ id, name, imgUrl, description }) {
-
     const { classes } = useStyles();
 
     return (
@@ -98,7 +103,6 @@ export default function DestinationIndex() {
           <Title order={3} className={classes.title}>
             {description.slice(0, 50)}...
           </Title>
-
         </div>
         <Button
           variant="white"
@@ -159,19 +163,6 @@ export default function DestinationIndex() {
           aria-label="Search Destinations"
           onChange={debouncedChangeHandler}
         />
-
-        <Grid my={60}>
-          {!filteredDestinations?.length && (
-            <Text sx={{ textAlign: 'center' }} py={48}>
-              No destination found.
-            </Text>
-          )}
-          {filteredDestinations?.map((item) => (
-            <Grid.Col key={item.id} span={12} md={6}>
-              <Card image={item.imgUrl} category={item.name} title={item.description} />
-            </Grid.Col>
-          ))}
-        </Grid>
 
         {loading ? (
           <p>Loading...</p>
