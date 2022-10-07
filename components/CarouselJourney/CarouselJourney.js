@@ -8,6 +8,7 @@ import {
   Button,
   useMantineTheme,
 } from "@mantine/core";
+import Link from "next/link";
 
 
 const useStyles = createStyles((theme) => ({
@@ -57,9 +58,11 @@ function Card({ image, title, category }) {
           {title}
         </Text>
       </div>
-      <Button variant="white" color="dark">
-        Create Journey
-      </Button>
+      <Link href={`/rooms/create`} passHref>
+        <Button variant="white" color="dark" component="a">
+          Create Journey
+        </Button>
+      </Link>
     </Paper>
   );
 }

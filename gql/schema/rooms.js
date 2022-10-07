@@ -78,3 +78,9 @@ export const GET_ROOM = gql`
     }
   }
 `;
+
+export const JOIN_ROOM = gql`
+  mutation JoinRoom($joinRoomId: ID!) {
+    joinRoom(id: $joinRoomId)
+  }
+`;

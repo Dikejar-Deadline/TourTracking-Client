@@ -16,9 +16,11 @@ import { DatePicker } from '@mantine/dates';
 import { useGQLQuery } from 'hooks/useGQLQuery';
 import { SET_ROOM } from 'gql/schema/rooms';
 import { useGQLMutate } from 'hooks/useGQLMutate';
-import { QueryCache } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 
 export default function AuthenticationForm(props) {
+  const queryClient = useQueryClient()
+  const destinations = queryClient.getQueryData(['destinations'])
   const form = useForm({
     initialValues: {
       dropPoint: '',
@@ -42,27 +44,22 @@ export default function AuthenticationForm(props) {
     minParticipant: 2,
     schedule: form.values.schedule,
     duration: form.values.duration,
-    destinationId: form.values.destinationId,
+    destinationId: destinations?.destinations?.find(destination => {
+      return destination.name == form.values.destinationId.toString()
+    })?.id
   }
 
-  const queryCache = new QueryCache({
-    onError: error => {
-      console.log(error)
-    },
-    onSuccess: data => {
-      console.log(data)
-    }
-  })
-
   const { mutate, error } = useGQLMutate(SET_ROOM, data, ['rooms'])
-  const destinations = queryCache.find(['destinations'])
+
   const handleCreate = (e) => {
     /* eslint-disable */
     e.preventDefault()
     mutate()
   }
-  console.log(destinations)
 
+  const destinationsName = destinations?.destinations.map(destination => (
+    destination.name
+  ))
 
   return (
     <Layout>
@@ -80,11 +77,10 @@ export default function AuthenticationForm(props) {
               description="Select your journey"
               placeholder="Mandalika"
               required
-              data={['Bali', 'Sumbawa']}
+              data={destinationsName}
               value={form.values.destinationId}
               onChange={(event) => form.setFieldValue('destinationId', event.target?.value)}
             />
-
             <TextInput
               required
               label="Tempat Ketemuan"

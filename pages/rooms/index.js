@@ -9,6 +9,7 @@ import { CardGrid } from '@/components/CardGrid'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { GET_ROOMS } from 'gql/schema'
 import { useGQLQuery } from 'hooks/useGQLQuery'
+import Link from 'next/link'
 // import PostsList from '@/components/PostsList' 
 
 const useStyles = createStyles((theme) => ({
@@ -77,9 +78,11 @@ export default function Blog() {
             {title}
           </Title>
         </div>
-        <Button variant="white" color="dark">
-          Create Journey
-        </Button>
+        <Link href={`/rooms/create`} passHref>
+          <Button variant="white" color="dark" component='a'>
+            Create Journey
+          </Button>
+        </Link>
       </Paper>
     );
   }

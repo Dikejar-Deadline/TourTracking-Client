@@ -5,6 +5,9 @@ import formatDate from 'lib/formatDate'
 import React from 'react'
 import { useStyles } from '@/components/Layout/RoomDetail/RoomDetail.styles'
 import Chat from '@/components/Chat'
+import { useGQLMutate } from 'hooks/useGQLMutate'
+import { JOIN_ROOM } from 'gql/schema/rooms'
+import { useRouter } from 'next/router'
 const dayjs = require('dayjs')
 
 const avatars = [
@@ -14,7 +17,9 @@ const avatars = [
 ];
 
 export default function RoomDetailLayout({ data, children }) {
-  console.log(data)
+  const router = useRouter()
+  const { id } = router.query
+
   const ISOPublishedTime = data?.schedule ? new Date(data?.schedule).toISOString() : null
   const { classes } = useStyles()
 
@@ -39,6 +44,13 @@ export default function RoomDetailLayout({ data, children }) {
     })
   }
 
+  const { mutate: join, error } = useGQLMutate(JOIN_ROOM, { "joinRoomId": id }, ['join'])
+
+  const handleJoin = (e) => {
+    e.preventDefault()
+    join()
+  }
+  console.log(error)
   return (
     <Layout
       title="Room Detail"
@@ -83,11 +95,9 @@ export default function RoomDetailLayout({ data, children }) {
         </div>
         <div>
           <Button
-            component='a'
-            target='_blank'
             rel='noopener noreferrer'
-            href="#"
             className={classes.shareButton}
+            onClick={(e) => handleJoin(e)}
           >
             Join
           </Button>
