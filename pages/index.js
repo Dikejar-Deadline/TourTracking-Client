@@ -57,22 +57,22 @@ export default function Home() {
       <Title order={2} color="#1971C2" mt={70}>Create Your Own Journey</Title>
       <Divider my='xl' />
       <CarousalJourney data={destinations.destinations} />
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <Button
-            component={Link}
-            ref={ref}
-            href='/destinations'
-            rightIcon={
-              <motion.div animate={{ x: hovered ? 5 : 0 }}>
-                <IconArrowRight size={20} />
-              </motion.div>
-            }
-            noIcon
-            underline={false}
-          >
-            All Destinations
-          </Button>
-        </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <Button
+          component={Link}
+          ref={ref}
+          href='/destinations'
+          rightIcon={
+            <motion.div animate={{ x: hovered ? 5 : 0 }}>
+              <IconArrowRight size={20} />
+            </motion.div>
+          }
+          noIcon
+          underline={false}
+        >
+          All Destinations
+        </Button>
+      </Box>
     </Layout>
   )
 }

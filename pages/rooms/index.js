@@ -58,8 +58,6 @@ export default function Blog() {
     room?.Destination?.name.toLowerCase().includes(searchValue.toLowerCase())
   )
 
-  console.log(filteredRooms)
-
   function Card({ image, title, category }) {
     const { classes } = useStyles();
 
@@ -101,7 +99,12 @@ export default function Blog() {
           onChange={(e) => setSearchValue(e.target.value)}
         />
         <Grid my={60}>
-          {filteredRooms.map(room => (
+          {!filteredRooms?.length && (
+            <Text sx={{ textAlign: 'center' }} py={48}>
+              No room found.
+            </Text>
+          )}
+          {filteredRooms?.map(room => (
             <Grid.Col span={12} md={6} key={room?.id}>
               <CardGrid data={room} />
             </Grid.Col>

@@ -1,10 +1,13 @@
-import { Button, createStyles, Grid, Input, List, Paper, Text, Title } from '@mantine/core'
+import { Button, createStyles, Grid, Highlight, Input, List, Paper, Text, Title } from '@mantine/core'
 import { IconSearch } from '@tabler/icons'
 import React from 'react'
 
 
 import Layout from '@/components/Layout'
 import PageLayout from '@/components/Layout/PageLayout'
+import { dehydrate, QueryClient } from '@tanstack/react-query'
+import { GET_DESTINATIONS } from 'gql/schema'
+import { useGQLQuery } from 'hooks/useGQLQuery'
 // import PostsList from '@/components/PostsList' 
 
 const useStyles = createStyles((theme) => ({
@@ -23,7 +26,7 @@ const useStyles = createStyles((theme) => ({
     fontWeight: 900,
     color: theme.white,
     lineHeight: 1.2,
-    fontSize: 32,
+    fontSize: 20,
     marginTop: theme.spacing.xs,
   },
 
@@ -35,12 +38,25 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export default function Blog({ posts }) {
-  const [searchValue, setSearchValue] = React.useState('')
+export async function getServerSideProps() {
+  const queryClient = new QueryClient()
+  await queryClient.prefetchQuery(["destinations"], () => fetchData(GET_DESTINATIONS));
 
-  // const filteredPosts = posts.filter((post) =>
-  //   post.title.toLowerCase().includes(searchValue.toLowerCase())
-  // )
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
+}
+
+export default function Blog() {
+  const [searchValue, setSearchValue] = React.useState('')
+  const { data: destinations } = useGQLQuery(["destinations"], GET_DESTINATIONS)
+
+  const filteredDestinations = destinations?.destinations?.filter((destination) =>
+    destination.name.toLowerCase().includes(searchValue.toLowerCase())
+  )
+
   function Card({ image, title, category }) {
     const { classes } = useStyles();
 
@@ -53,12 +69,12 @@ export default function Blog({ posts }) {
         className={classes.card}
       >
         <div>
-          <Text className={classes.category} size="xs">
+          <Highlight highlight={category} className={classes.category} size="xs">
             {category}
-          </Text>
-          <Title order={3} className={classes.title}>
+          </Highlight>
+          <Highlight highlight={title} order={3} className={classes.title}>
             {title}
-          </Title>
+          </Highlight>
         </div>
         <Button variant="white" color="dark">
           Create Journey
@@ -66,46 +82,6 @@ export default function Blog({ posts }) {
       </Paper>
     );
   }
-
-  const data = [
-    {
-      image:
-        'https://images.unsplash.com/photo-1508193638397-1c4234db14d8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
-      title: 'Best forests to visit in North America',
-      category: 'Sumbawa',
-    },
-    {
-      image:
-        'https://images.unsplash.com/photo-1559494007-9f5847c49d94?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
-      title: 'Hawaii beaches review: better than you think',
-      category: 'Sumbawa',
-    },
-    {
-      image:
-        'https://images.unsplash.com/photo-1608481337062-4093bf3ed404?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
-      title: 'Mountains at night: 12 best locations to enjoy the view',
-      category: 'Sumbawa',
-    },
-    {
-      image:
-        'https://images.unsplash.com/photo-1507272931001-fc06c17e4f43?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
-      title: 'Aurora in Norway: when to visit for best experience',
-      category: 'Sumbawa',
-    },
-    {
-      image:
-        'https://images.unsplash.com/photo-1510798831971-661eb04b3739?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
-      title: 'Best places to visit this winter',
-      category: 'Sumbawa',
-    },
-    {
-      image:
-        'https://images.unsplash.com/photo-1582721478779-0ae163c05a60?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
-      title: 'Active volcanos reviews: travel at your own risk',
-      category: 'Sumbawa',
-    },
-  ];
-
 
   return (
     <Layout title='Destinations List'>
@@ -122,9 +98,14 @@ export default function Blog({ posts }) {
           onChange={(e) => setSearchValue(e.target.value)}
         />
         <Grid my={60}>
-          {data.map((item) => (
-            <Grid.Col key={data.title} span={12} md={6}>
-              <Card {...item} />
+          {!filteredDestinations?.length && (
+            <Text sx={{ textAlign: 'center' }} py={48}>
+              No destination found.
+            </Text>
+          )}
+          {filteredDestinations?.map((item) => (
+            <Grid.Col key={item.id} span={12} md={6}>
+              <Card image={item.imgUrl} category={item.name} title={item.description} />
             </Grid.Col>
           ))}
         </Grid>
