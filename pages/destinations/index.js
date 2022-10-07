@@ -1,24 +1,32 @@
-import { Button, createStyles, Grid, Highlight, Input, List, Paper, Text, Title } from '@mantine/core'
-import { IconSearch } from '@tabler/icons'
-import React from 'react'
+import {
+  Button,
+  createStyles,
+  Grid,
+  Input,
+  Paper,
+  Text,
+  Title,
+} from "@mantine/core";
+import { IconSearch } from "@tabler/icons";
+import React, { useCallback, useEffect, useState } from "react";
+import Layout from "@/components/Layout";
+import PageLayout from "@/components/Layout/PageLayout";
+import { GET_DESTINATIONS } from "gql/schema";
+import { useRouter } from "next/router";
+import debounce from "lodash.debounce";
+import { useMutation, useQuery } from "@apollo/client";
+import { DELETE_DESTINATON } from "gql/schema/destinations";
 
-
-import Layout from '@/components/Layout'
-import PageLayout from '@/components/Layout/PageLayout'
-import { dehydrate, QueryClient } from '@tanstack/react-query'
-import { GET_DESTINATIONS } from 'gql/schema'
-import { useGQLQuery } from 'hooks/useGQLQuery'
-// import PostsList from '@/components/PostsList' 
 
 const useStyles = createStyles((theme) => ({
   card: {
     height: 440,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
   },
 
   title: {
@@ -34,30 +42,45 @@ const useStyles = createStyles((theme) => ({
     color: theme.white,
     opacity: 0.7,
     fontWeight: 700,
-    textTransform: 'uppercase',
+    textTransform: "uppercase",
   },
 }));
 
-export async function getServerSideProps() {
-  const queryClient = new QueryClient()
-  await queryClient.prefetchQuery(["destinations"], () => fetchData(GET_DESTINATIONS));
+export default function DestinationIndex() {
+  const router = useRouter();
+  const [searchValue, setSearchValue] = useState("");
+  const [filtered, setFiltered] = useState([]);
+  const { loading, error, data } = useQuery(GET_DESTINATIONS);
+  const [
+    deleteDestination,
+    { data: deteleData, loading: loadingData, error: errorData },
+  ] = useMutation(DELETE_DESTINATON, {
+    refetchQueries: [{ query: GET_DESTINATIONS }],
+  });
 
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
+  const filterDestination = () => {
+    if (searchValue) {
+      setFiltered(
+        data?.destinations.filter(({ name }) => {
+          return name.toLowerCase().search(searchValue) == 0;
+        })
+      );
+    } else {
+      setFiltered(data?.destinations);
+    }
   };
-}
 
-export default function Blog() {
-  const [searchValue, setSearchValue] = React.useState('')
-  const { data: destinations } = useGQLQuery(["destinations"], GET_DESTINATIONS)
+  const changeHandler = (event) => {
+    setSearchValue(event.target.value);
+  };
+  const debouncedChangeHandler = useCallback(debounce(changeHandler, 300), []);
 
-  const filteredDestinations = destinations?.destinations?.filter((destination) =>
-    destination.name.toLowerCase().includes(searchValue.toLowerCase())
-  )
+  useEffect(() => {
+    if (data) filterDestination();
+  }, [data, searchValue]);
 
-  function Card({ image, title, category }) {
+  function Card({ id, name, imgUrl, description }) {
+
     const { classes } = useStyles();
 
     return (
@@ -65,38 +88,78 @@ export default function Blog() {
         shadow="md"
         p="xl"
         radius="md"
-        sx={{ backgroundImage: `url(${image})` }}
+        sx={{ backgroundImage: `url(${imgUrl})` }}
         className={classes.card}
       >
         <div>
-          <Highlight highlight={category} className={classes.category} size="xs">
-            {category}
-          </Highlight>
-          <Highlight highlight={title} order={3} className={classes.title}>
-            {title}
-          </Highlight>
+          <Text className={classes.category} size="xs">
+            {name}
+          </Text>
+          <Title order={3} className={classes.title}>
+            {description.slice(0, 50)}...
+          </Title>
+
         </div>
-        <Button variant="white" color="dark">
+        <Button
+          variant="white"
+          color="dark"
+          onClick={() => {
+            router.push({
+              pathname: "/destinations/destinationById",
+              query: { id },
+            });
+          }}
+        >
           Create Journey
         </Button>
+        <button
+          onClick={() => {
+            router.push({
+              pathname: "/destinations/edit",
+              query: { id },
+            });
+          }}
+        >
+          Edit destination
+        </button>
+        <button
+          onClick={() => {
+            deleteDestination({
+              variables: { deleteDestinationId: id },
+            });
+          }}
+        >
+          Delete destination
+        </button>
       </Paper>
     );
   }
 
   return (
-    <Layout title='Destinations List'>
+    <Layout title="Destinations List">
       <PageLayout
-        title='Destinations List'
+        title="Destinations List"
         description="Make your own journey and plans your holiday together with new people."
       >
+        <button
+          onClick={() => {
+            router.push({
+              pathname: "destinations/create",
+            });
+          }}
+        >
+          Create destination
+        </button>
+
         <Input
           icon={<IconSearch size={15} />}
           placeholder="Search Destinations"
-          type='text'
-          radius='md'
+          type="text"
+          radius="md"
           aria-label="Search Destinations"
-          onChange={(e) => setSearchValue(e.target.value)}
+          onChange={debouncedChangeHandler}
         />
+
         <Grid my={60}>
           {!filteredDestinations?.length && (
             <Text sx={{ textAlign: 'center' }} py={48}>
@@ -110,7 +173,20 @@ export default function Blog() {
           ))}
         </Grid>
 
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          <Grid my={60}>
+            {filtered.map((item, index) => {
+              return (
+                <Grid.Col key={index.toString()} span={12} md={6}>
+                  <Card {...item} />
+                </Grid.Col>
+              );
+            })}
+          </Grid>
+        )}
       </PageLayout>
     </Layout>
-  )
+  );
 }

@@ -1,16 +1,24 @@
-import { Carousel } from '@mantine/carousel';
-import { useMediaQuery } from '@mantine/hooks';
-import { createStyles, Paper, Text, Title, Button, useMantineTheme, Highlight } from '@mantine/core';
+import { Carousel } from "@mantine/carousel";
+import { useMediaQuery } from "@mantine/hooks";
+import {
+  createStyles,
+  Paper,
+  Text,
+  Title,
+  Button,
+  useMantineTheme,
+} from "@mantine/core";
+
 
 const useStyles = createStyles((theme) => ({
   card: {
     height: 440,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
   },
 
   title: {
@@ -26,7 +34,7 @@ const useStyles = createStyles((theme) => ({
     color: theme.colors.blue,
     opacity: 0.7,
     fontWeight: 700,
-    textTransform: 'uppercase',
+    textTransform: "uppercase",
   },
 }));
 
@@ -42,12 +50,12 @@ function Card({ image, title, category }) {
       className={classes.card}
     >
       <div>
-        <Highlight highlight={category} className={classes.category} size="xs">
+        <Title order={3} className={classes.title}>
           {category}
-        </Highlight>
-        <Highlight highlight={title} order={3} className={classes.title}>
+        </Title>
+        <Text className={classes.category} size="xs">
           {title}
-        </Highlight>
+        </Text>
       </div>
       <Button variant="white" color="dark">
         Create Journey
@@ -59,9 +67,14 @@ function Card({ image, title, category }) {
 export function CarousalJourney(props) {
   const theme = useMantineTheme();
   const mobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm}px)`);
-  const slides = props.data?.map((item) => (
-    <Carousel.Slide key={item.title}>
-      <Card image={item.imgUrl} title={item.description} category={item.name} />
+
+  const slides = props.data?.map((item, index) => (
+    <Carousel.Slide key={index.toString()}>
+      <Card
+        image={item.imgUrl}
+        title={item.description.slice(0, 100)}
+        category={item.name}
+      />
     </Carousel.Slide>
   ));
 
@@ -69,7 +82,7 @@ export function CarousalJourney(props) {
     <Carousel
       my={60}
       slideSize="50%"
-      breakpoints={[{ maxWidth: 'sm', slideSize: '100%', slideGap: 2 }]}
+      breakpoints={[{ maxWidth: "sm", slideSize: "100%", slideGap: 2 }]}
       slideGap="xl"
       align="start"
       slidesToScroll={mobile ? 1 : 2}
