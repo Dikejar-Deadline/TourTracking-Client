@@ -16,6 +16,7 @@ import { DatePicker } from '@mantine/dates';
 import { useGQLQuery } from 'hooks/useGQLQuery';
 import { SET_ROOM } from 'gql/schema/rooms';
 import { useGQLMutate } from 'hooks/useGQLMutate';
+import { QueryCache } from '@tanstack/react-query'
 
 export default function AuthenticationForm(props) {
   const form = useForm({
@@ -44,12 +45,23 @@ export default function AuthenticationForm(props) {
     destinationId: form.values.destinationId,
   }
 
+  const queryCache = new QueryCache({
+    onError: error => {
+      console.log(error)
+    },
+    onSuccess: data => {
+      console.log(data)
+    }
+  })
+
   const { mutate, error } = useGQLMutate(SET_ROOM, data, ['rooms'])
+  const destinations = queryCache.find(['destinations'])
   const handleCreate = (e) => {
     /* eslint-disable */
     e.preventDefault()
     mutate()
   }
+  console.log(destinations)
 
 
   return (
