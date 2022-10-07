@@ -58,7 +58,7 @@ export default function DestinationIndex() {
     refetchQueries: [{ query: GET_DESTINATIONS }],
     context: {
       headers: {
-        Authorization: token ? token : "",
+        Authorization: token ? token[0] : "",
       },
     },
   });
