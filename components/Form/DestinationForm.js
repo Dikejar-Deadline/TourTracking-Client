@@ -17,7 +17,7 @@ export default function DestinationForm({ props = null }) {
       refetchQueries: [{ query: GET_DESTINATIONS }],
       context: {
         headers: {
-          Authorization: token ? token : "",
+          Authorization: token ? token[0] : "",
         },
       },
     }
@@ -29,7 +29,7 @@ export default function DestinationForm({ props = null }) {
     refetchQueries: [{ query: GET_DESTINATIONS }],
     context: {
       headers: {
-        authorization: token ? token : "",
+        Authorization: token ? token[0] : "",
       },
     },
   });
