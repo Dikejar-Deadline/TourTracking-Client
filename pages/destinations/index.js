@@ -159,20 +159,6 @@ export default function DestinationIndex() {
           aria-label="Search Destinations"
           onChange={debouncedChangeHandler}
         />
-
-        <Grid my={60}>
-          {!filteredDestinations?.length && (
-            <Text sx={{ textAlign: 'center' }} py={48}>
-              No destination found.
-            </Text>
-          )}
-          {filteredDestinations?.map((item) => (
-            <Grid.Col key={item.id} span={12} md={6}>
-              <Card image={item.imgUrl} category={item.name} title={item.description} />
-            </Grid.Col>
-          ))}
-        </Grid>
-
         {loading ? (
           <p>Loading...</p>
         ) : (
