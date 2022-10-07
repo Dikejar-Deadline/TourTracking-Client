@@ -15,6 +15,8 @@ import {
 // import { GoogleButton, TwitterButton } from '../SocialButtons/SocialButtons'
 import Layout from '@/components/Layout'
 import { IconBrandGoogle } from '@tabler/icons'
+import { GET_LOGIN, GET_REGISTER } from 'gql/schema';
+import { useGQLMutate } from 'hooks/useGQLMutate';
 
 export default function AuthenticationForm(props) {
   const [type, toggle] = useToggle(['login', 'register']);
@@ -32,6 +34,24 @@ export default function AuthenticationForm(props) {
     },
   });
 
+
+  const variables = {
+    email: form.values.email,
+    username: form.values.name,
+    password: form.values.password,
+    terms: form.values.terms,
+  }
+
+
+  const { mutate: login, error: errLogin } = useGQLMutate(GET_LOGIN, variables, ['login'])
+  const { mutate: register, error: errRegis } = useGQLMutate(GET_REGISTER, variables, ['register'])
+  const handleSubmit = (e) => {
+    /* eslint-disable */
+    e.preventDefault()
+    type == 'login' && login()
+    type == 'register' && register()
+  }
+
   return (
     <Layout>
       <Paper radius="md" p="xl" withBorder {...props}>
@@ -45,7 +65,7 @@ export default function AuthenticationForm(props) {
 
         <Divider label="Or continue with email" labelPosition="center" my="lg" />
 
-        <form onSubmit={form.onSubmit(() => { })}>
+        <form onSubmit={(e) => handleSubmit(e)}>
           <Stack>
             {type === 'register' && (
               <TextInput

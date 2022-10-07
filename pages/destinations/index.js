@@ -17,6 +17,7 @@ import debounce from "lodash.debounce";
 import { useMutation, useQuery } from "@apollo/client";
 import { DELETE_DESTINATON } from "gql/schema/destinations";
 
+
 const useStyles = createStyles((theme) => ({
   card: {
     height: 440,
@@ -33,7 +34,7 @@ const useStyles = createStyles((theme) => ({
     fontWeight: 900,
     color: theme.white,
     lineHeight: 1.2,
-    fontSize: 32,
+    fontSize: 20,
     marginTop: theme.spacing.xs,
   },
 
@@ -79,6 +80,7 @@ export default function DestinationIndex() {
   }, [data, searchValue]);
 
   function Card({ id, name, imgUrl, description }) {
+
     const { classes } = useStyles();
 
     return (
@@ -96,6 +98,7 @@ export default function DestinationIndex() {
           <Title order={3} className={classes.title}>
             {description.slice(0, 50)}...
           </Title>
+
         </div>
         <Button
           variant="white"
@@ -156,6 +159,19 @@ export default function DestinationIndex() {
           aria-label="Search Destinations"
           onChange={debouncedChangeHandler}
         />
+
+        <Grid my={60}>
+          {!filteredDestinations?.length && (
+            <Text sx={{ textAlign: 'center' }} py={48}>
+              No destination found.
+            </Text>
+          )}
+          {filteredDestinations?.map((item) => (
+            <Grid.Col key={item.id} span={12} md={6}>
+              <Card image={item.imgUrl} category={item.name} title={item.description} />
+            </Grid.Col>
+          ))}
+        </Grid>
 
         {loading ? (
           <p>Loading...</p>

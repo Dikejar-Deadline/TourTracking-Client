@@ -71,6 +71,7 @@ export default function Home() {
           component={Link}
           ref={ref}
           href="/destinations"
+
           rightIcon={
             <motion.div animate={{ x: hovered ? 5 : 0 }}>
               <IconArrowRight size={20} />

@@ -1,13 +1,17 @@
-import { useQuery } from "@tanstack/react-query";
-import { GraphQLClient, request } from "graphql-request";
+import { useQuery } from '@tanstack/react-query';
+import { GraphQLClient, request } from 'graphql-request';
+import { useLocalStorage } from '@mantine/hooks';
 
+const endpoint = 'https://16e5-140-213-150-122.ap.ngrok.io/';
 export const graphQlEndpoint = "http://localhost:4000/";
+
 export const useGQLQuery = (key, query, variables, config = {}) => {
+  const [token, setToken] = useLocalStorage({ key: 'access_token' });
   const headers = {
     headers: {
-      authorization: localStorage.getItem("access_token"),
-    },
-  };
+      authorization: `${token ? token : null}`
+    }
+  }
 
   const graphQLClient = new GraphQLClient(graphQlEndpoint, headers);
 
@@ -15,6 +19,7 @@ export const useGQLQuery = (key, query, variables, config = {}) => {
 
   const fetchData = async () =>
     await request(graphQlEndpoint, query, variables);
+
 
   return useQuery(key, fetchData, config);
 };

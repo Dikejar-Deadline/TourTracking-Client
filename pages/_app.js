@@ -10,6 +10,7 @@ import { useState } from "react";
 import { ApolloProvider } from "@apollo/client";
 import { useApolloConfig } from "hooks/useApolloConfig";
 
+
 export default function App(props) {
   const { Component, pageProps } = props;
   const [queryClient] = useState(() => new QueryClient());

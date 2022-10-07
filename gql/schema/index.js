@@ -1,2 +1,4 @@
 export { GET_DESTINATIONS } from "./destinations"
-export { GET_ROOMS } from "./rooms"
+export { GET_ROOMS, SET_ROOM, GET_ROOM } from "./rooms"
+export { GET_LOGIN } from "./login"
+export { GET_REGISTER } from "./register"

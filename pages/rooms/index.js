@@ -6,6 +6,9 @@ import React from 'react'
 import Layout from '@/components/Layout'
 import PageLayout from '@/components/Layout/PageLayout'
 import { CardGrid } from '@/components/CardGrid'
+import { dehydrate, QueryClient } from '@tanstack/react-query'
+import { GET_ROOMS } from 'gql/schema'
+import { useGQLQuery } from 'hooks/useGQLQuery'
 // import PostsList from '@/components/PostsList' 
 
 const useStyles = createStyles((theme) => ({
@@ -36,12 +39,25 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export default function Blog({ posts }) {
-  const [searchValue, setSearchValue] = React.useState('')
+export async function getServerSideProps() {
+  const queryClient = new QueryClient()
+  await queryClient.prefetchQuery(["rooms"], () => fetchData(GET_ROOMS));
 
-  // const filteredPosts = posts.filter((post) =>
-  //   post.title.toLowerCase().includes(searchValue.toLowerCase())
-  // )
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
+}
+
+export default function Blog() {
+  const [searchValue, setSearchValue] = React.useState('')
+  const { data: rooms } = useGQLQuery(["rooms"], () => GET_ROOMS)
+
+  const filteredRooms = rooms?.rooms?.filter((room) =>
+    room?.Destination?.name.toLowerCase().includes(searchValue.toLowerCase())
+  )
+
   function Card({ image, title, category }) {
     const { classes } = useStyles();
 
@@ -68,46 +84,6 @@ export default function Blog({ posts }) {
     );
   }
 
-  const data = [
-    {
-      image:
-        'https://images.unsplash.com/photo-1508193638397-1c4234db14d8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
-      title: 'Best forests to visit in North America',
-      category: 'Sumbawa',
-    },
-    {
-      image:
-        'https://images.unsplash.com/photo-1559494007-9f5847c49d94?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
-      title: 'Hawaii beaches review: better than you think',
-      category: 'Sumbawa',
-    },
-    {
-      image:
-        'https://images.unsplash.com/photo-1608481337062-4093bf3ed404?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
-      title: 'Mountains at night: 12 best locations to enjoy the view',
-      category: 'Sumbawa',
-    },
-    {
-      image:
-        'https://images.unsplash.com/photo-1507272931001-fc06c17e4f43?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
-      title: 'Aurora in Norway: when to visit for best experience',
-      category: 'Sumbawa',
-    },
-    {
-      image:
-        'https://images.unsplash.com/photo-1510798831971-661eb04b3739?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
-      title: 'Best places to visit this winter',
-      category: 'Sumbawa',
-    },
-    {
-      image:
-        'https://images.unsplash.com/photo-1582721478779-0ae163c05a60?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
-      title: 'Active volcanos reviews: travel at your own risk',
-      category: 'Sumbawa',
-    },
-  ];
-
-
   return (
     <Layout title='Rooms List'>
       <PageLayout
@@ -123,15 +99,16 @@ export default function Blog({ posts }) {
           onChange={(e) => setSearchValue(e.target.value)}
         />
         <Grid my={60}>
-          <Grid.Col key={data.title} span={12} md={6}>
-            <CardGrid />
-          </Grid.Col>
-          <Grid.Col key={data.title} span={12} md={6}>
-            <CardGrid />
-          </Grid.Col>
-          <Grid.Col key={data.title} span={12} md={6}>
-            <CardGrid />
-          </Grid.Col>
+          {!filteredRooms?.length && (
+            <Text sx={{ textAlign: 'center' }} py={48}>
+              No room found.
+            </Text>
+          )}
+          {filteredRooms?.map(room => (
+            <Grid.Col span={12} md={6} key={room?.id}>
+              <CardGrid data={room} />
+            </Grid.Col>
+          ))}
         </Grid>
 
       </PageLayout>

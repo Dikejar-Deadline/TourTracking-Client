@@ -9,6 +9,7 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 
+
 const useStyles = createStyles((theme) => ({
   card: {
     height: 440,
@@ -23,14 +24,14 @@ const useStyles = createStyles((theme) => ({
   title: {
     fontFamily: `Greycliff CF, ${theme.fontFamily}`,
     fontWeight: 900,
-    color: theme.white,
+    color: theme.colors.blue,
     lineHeight: 1.2,
-    fontSize: 23,
+    fontSize: 20,
     marginTop: theme.spacing.xs,
   },
 
   category: {
-    color: theme.white,
+    color: theme.colors.blue,
     opacity: 0.7,
     fontWeight: 700,
     textTransform: "uppercase",
